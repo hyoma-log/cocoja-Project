@@ -17,7 +17,7 @@ group :development, :test do
   gem 'brakeman', require: false
   gem 'debug', platforms: %i[mri windows]
   gem 'factory_bot_rails', '~> 6.4'
-  gem 'faker', '~> 3.3'
+  gem 'faker', '~> 3.5'
   gem 'rspec-rails', '~> 7.1'
   gem 'rubocop-rails-omakase', require: false
   gem 'rubocop-rspec', require: false
