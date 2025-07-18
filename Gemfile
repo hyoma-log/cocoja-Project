@@ -9,7 +9,7 @@ gem 'rails', '~> 7.1.5'
 gem 'stimulus-rails'
 gem 'turbo-rails'
 gem 'sprockets-rails'
-gem 'redis', '~> 5.0'
+gem 'redis', '~> 5.4'
 gem 'bootsnap', require: false
 gem 'tzinfo-data', platforms: %i[windows jruby]
 
