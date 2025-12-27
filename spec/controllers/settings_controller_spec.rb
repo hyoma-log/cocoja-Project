@@ -13,6 +13,8 @@ RSpec.describe SettingsController, type: :controller do
       let(:user) { create(:user) }
 
       before do
+        # 重要：メール認証を完了させて、302リダイレクトを回避する
+        user.confirm if user.respond_to?(:confirm)
         @request.env['devise.mapping'] = Devise.mappings[:user]
         sign_in user
       end
