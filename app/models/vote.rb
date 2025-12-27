@@ -16,8 +16,12 @@ class Vote < ApplicationRecord
   validate :daily_point_limit
   validate :cannot_vote_own_post
 
+  # scope :today, lambda {
+  #   where("DATE(created_at AT TIME ZONE 'UTC') = ?", Time.zone.today)
+  # }
   scope :today, lambda {
-    where("DATE(created_at AT TIME ZONE 'UTC') = ?", Time.zone.today)
+    # Time.zone.todayの開始時刻から終了時刻までの範囲を指定
+    where(created_at: Time.zone.now.all_day)
   }
 
   before_validation :set_voted_on

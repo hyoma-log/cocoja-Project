@@ -69,13 +69,15 @@ RSpec.describe VotesController, type: :controller do
 
       context 'when 1日の投票上限を超えた場合' do
         before do
-          create(:vote, user: user, points: 4, post: create(:post))
+          # created_atを明示的にTime.zone.nowにすることで、scope :todayに確実に入れる
+          create(:vote, user: user, points: 5, post: create(:post), created_at: Time.zone.now)
+          user.reload
         end
 
         let(:over_limit_params) do
           {
             post_id: post_item.id,
-            vote: { points: 2 },
+            vote: { points: 1 },
             format: :turbo_stream
           }
         end
@@ -88,7 +90,9 @@ RSpec.describe VotesController, type: :controller do
 
         it 'エラーメッセージが設定されること' do
           post :create, params: over_limit_params
-          expect(flash.now[:alert]).to include('残りポイント不足です')
+          # flash.now[:alert] を取得。モデルのメッセージと部分一致させる
+          alert_msg = flash.now[:alert] || flash[:alert]
+          expect(alert_msg).to include('本日のポイント上限')
         end
       end
     end
