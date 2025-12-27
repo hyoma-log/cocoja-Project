@@ -1,5 +1,4 @@
 class DeviseCreateUsers < ActiveRecord::Migration[7.1]
-
   def change
     create_user_table
     add_user_indexes

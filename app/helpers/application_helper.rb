@@ -44,7 +44,7 @@ module ApplicationHelper
       keywords: 'ココじゃ, 都道府県, 魅力度ランキング, 地域情報, SNS, 観光, 地元',
       canonical: 'https://www.cocoja.jp/',
       separator: '|',
-      og:{
+      og: {
         site_name: :site,
         title: :title,
         description: :description,
@@ -94,6 +94,7 @@ module ApplicationHelper
 
   def rank_change_display_value(change)
     return unless change.positive? || change.negative?
+
     change.abs
   end
 end

@@ -7,8 +7,8 @@ if Rails.env.production?
                     Rails.application.credentials.dig(:gmail, :password),
                     :login)
     test_smtp.finish
-    Rails.logger.info "SMTP connection test: Success"
-  rescue => e
+    Rails.logger.info 'SMTP connection test: Success'
+  rescue StandardError => e
     Rails.logger.error "SMTP connection test failed: #{e.message}"
   end
 end

@@ -6,6 +6,8 @@ RSpec.describe '画像アップロード機能', type: :system do
   let(:additional_image_path) { Rails.root.join('spec/fixtures/test_image2.jpg') }
 
   before do
+    create(:prefecture, name: '東京都')
+
     user.confirm if user.respond_to?(:confirm)
 
     # テスト用画像の作成
@@ -25,8 +27,6 @@ RSpec.describe '画像アップロード機能', type: :system do
   end
 
   describe '投稿画像機能' do
-    let!(:prefecture) { create(:prefecture, name: '東京都') }
-
     before do
       visit new_post_path
     end

@@ -36,6 +36,6 @@ module Myapp
                        request_specs: true
     end
 
-    config.autoload_paths += %W(#{config.root}/app/helpers)
+    config.autoload_paths += %W[#{config.root}/app/helpers]
   end
 end

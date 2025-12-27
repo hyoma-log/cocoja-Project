@@ -14,7 +14,11 @@ RSpec.describe 'ハッシュタグ機能', type: :system do
     context 'when 新規投稿を作成する場合' do
       it '投稿が保存され、ハッシュタグが作成されること' do
         visit new_post_path
-        select prefecture.name, from: '都道府県' rescue select prefecture.name, from: 'post[prefecture_id]'
+        begin
+          select prefecture.name, from: '都道府県'
+        rescue StandardError
+          select prefecture.name, from: 'post[prefecture_id]'
+        end
         fill_in 'post[content]', with: 'テスト投稿です #観光 #グルメ'
         click_button '投稿する'
 

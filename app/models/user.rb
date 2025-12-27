@@ -31,7 +31,7 @@ class User < ApplicationRecord
   end
 
   def voted_today_for?(post)
-    votes.where(post_id: post.id, voted_on: Time.zone.today).exists?
+    votes.exists?(post_id: post.id, voted_on: Time.zone.today)
   end
 
   def voted_for?(post)

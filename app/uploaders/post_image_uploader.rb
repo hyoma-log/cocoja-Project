@@ -25,7 +25,7 @@ class PostImageUploader < CarrierWave::Uploader::Base
   def public_id
     secure_token = Digest::SHA1.hexdigest(Time.now.to_s + SecureRandom.uuid)
 
-    if model && model.post_id
+    if model&.post_id
       return "posts/#{model.post_id}/#{secure_token[0..10]}"
     end
 

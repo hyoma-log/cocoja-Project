@@ -9,7 +9,7 @@ class Vote < ApplicationRecord
   }
 
   validates :user_id, uniqueness: {
-    scope: [:post_id, :voted_on],
+    scope: %i[post_id voted_on],
     message: '同じ投稿には1日1回しかポイントを付けられません'
   }
 

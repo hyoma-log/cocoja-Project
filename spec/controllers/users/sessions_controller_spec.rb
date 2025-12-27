@@ -5,7 +5,7 @@ RSpec.describe Users::SessionsController, type: :controller do
 
   before do
     # Devise のマッピングを明示的に指定
-    @request.env["devise.mapping"] = Devise.mappings[:user]
+    @request.env['devise.mapping'] = Devise.mappings[:user]
     user.confirm if user.respond_to?(:confirm)
     request.env['HTTPS'] = 'on'
   end
