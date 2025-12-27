@@ -20,6 +20,8 @@ RSpec.describe ProfilesController, type: :controller do
 
     before do
       @request.env['devise.mapping'] = Devise.mappings[:user]
+      user.confirm if user.respond_to?(:confirm) # メール認証をスキップ
+      request.env['HTTPS'] = 'on'                # HTTPSリクエストとして扱う
       sign_in user
     end
 
