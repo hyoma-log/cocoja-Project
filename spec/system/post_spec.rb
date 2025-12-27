@@ -4,15 +4,20 @@ RSpec.describe '投稿機能', type: :system do
   let(:user) { create(:user) }
   let!(:prefecture) { create(:prefecture, name: '東京都') }
 
+  before do
+    user.confirm if user.respond_to?(:confirm) # メール認証を承認済みに
+    sign_in user
+    driven_by(:rack_test)
+  end
+
   describe '新規投稿' do
     before do
-      sign_in user
-      driven_by(:rack_test)
       visit new_post_path
     end
 
     context 'when 正常な値の場合' do
       it '投稿の作成に成功すること' do
+        # ログインできていればセレクトボックスが見つかります
         expect(page).to have_select('post[prefecture_id]', with_options: ['東京都'])
         select '東京都', from: 'post[prefecture_id]'
         fill_in 'post[content]', with: 'テスト投稿です'
@@ -26,8 +31,7 @@ RSpec.describe '投稿機能', type: :system do
       it '必須項目が未入力の場合、エラーになること' do
         click_button '投稿する'
 
-        expect(page).to have_content 'Prefectureを入力してください'
-        expect(page).to have_content 'Prefectureを入力してください'
+        expect(page).to have_content '都道府県は必須項目です'
       end
     end
   end
@@ -36,8 +40,6 @@ RSpec.describe '投稿機能', type: :system do
     let!(:posts) { create_list(:post, 3, user: user, prefecture: prefecture) }
 
     before do
-      sign_in user
-      driven_by(:rack_test)
       visit posts_path
     end
 
@@ -52,8 +54,6 @@ RSpec.describe '投稿機能', type: :system do
     let!(:post) { create(:post, user: user, prefecture: prefecture) }
 
     before do
-      sign_in user
-      driven_by(:rack_test)
       visit post_path(post)
     end
 
