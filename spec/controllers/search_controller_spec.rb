@@ -7,6 +7,8 @@ RSpec.describe SearchController, type: :controller do
     let!(:hashtag) { create(:hashtag, name: 'testhashtag') }
 
     before do
+      # 重要: メール認証を完了させてログインを有効化する
+      user.confirm if user.respond_to?(:confirm)
       sign_in user
 
       request.env['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
