@@ -11,9 +11,20 @@ RSpec.describe PrefecturesController, type: :controller do
       let!(:no_votes_post) { create(:post, prefecture: prefecture) }
 
       before do
+        # 1. ユーザーを確実に「認証済み（メール確認済み）」にする
+        user.confirm if user.respond_to?(:confirm)
+
+        # 2. 通信プロトコルを HTTPS と誤認させる（ApplicationController の after_sign_in_path 対策）
+        request.env['HTTPS'] = 'on'
+
+        # 3. ログイン実行
+        sign_in user
+
         create(:vote, post: high_voted_post, points: 3)
         create(:vote, post: high_voted_post, points: 2)
         create(:vote, post: low_voted_post, points: 3)
+
+        # 4. リクエスト実行
         get :show, params: { id: prefecture.id }
       end
 
@@ -44,7 +55,11 @@ RSpec.describe PrefecturesController, type: :controller do
     end
 
     context 'when 投稿が存在しない場合' do
-      before { get :show, params: { id: prefecture.id } }
+      before do
+        user.confirm if user.respond_to?(:confirm)
+        sign_in user
+        get :show, params: { id: prefecture.id }
+      end
 
       it '正常にレスポンスを返すこと' do
         expect(response).to be_successful
@@ -65,6 +80,8 @@ RSpec.describe PrefecturesController, type: :controller do
 
     context 'when 存在しない都道府県IDの場合' do
       it 'ActiveRecord::RecordNotFoundを発生させること' do
+        user.confirm if user.respond_to?(:confirm)
+        sign_in user
         expect {
           get :show, params: { id: 'nonexistent' }
         }.to raise_error(ActiveRecord::RecordNotFound)
