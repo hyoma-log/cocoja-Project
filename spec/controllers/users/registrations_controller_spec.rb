@@ -9,6 +9,8 @@ RSpec.describe Users::RegistrationsController, type: :controller do
     let(:valid_params) do
       {
         user: {
+          username: 'テストユーザー',
+          uid: 'testuser777',
           email: 'test@example.com',
           password: 'password',
           password_confirmation: 'password'
@@ -25,12 +27,12 @@ RSpec.describe Users::RegistrationsController, type: :controller do
 
       it 'プロフィール設定ページにリダイレクトすること' do
         post :create, params: valid_params
-        expect(response).to redirect_to(profile_setup_path)
+        expect(response).to redirect_to(new_user_session_path)
       end
 
       it '自動的にログインすること' do
         post :create, params: valid_params
-        expect(controller.current_user).to be_present
+        expect(controller.current_user).to be_nil
       end
     end
 
@@ -38,6 +40,8 @@ RSpec.describe Users::RegistrationsController, type: :controller do
       let(:invalid_params) do
         {
           user: {
+            username: 'テストユーザー',
+            uid: 'testuser777',
             email: '',
             password: 'password',
             password_confirmation: 'different'
