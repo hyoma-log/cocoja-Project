@@ -4,9 +4,10 @@ RSpec.describe Users::SessionsController, type: :controller do
   let(:user) { create(:user) }
 
   before do
+    # Devise のマッピングを明示的に指定
+    @request.env["devise.mapping"] = Devise.mappings[:user]
     user.confirm if user.respond_to?(:confirm)
-    sign_in user
-    request.env['HTTPS'] = 'on' # HTTPSを期待するテストのため追加
+    request.env['HTTPS'] = 'on'
   end
 
   describe '#destroy' do
@@ -24,6 +25,8 @@ RSpec.describe Users::SessionsController, type: :controller do
   end
 
   describe '#after_sign_in_path_for' do
+    before { sign_out user }
+
     it 'ログインユーザー用トップページにリダイレクトすること' do
       post :create, params: { user: { email: user.email, password: user.password } }
       expect(response).to redirect_to(top_page_login_url(protocol: 'https'))
