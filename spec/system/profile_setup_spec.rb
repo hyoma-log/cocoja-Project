@@ -4,6 +4,7 @@ RSpec.describe 'プロフィール設定', type: :system do
   let(:user) { create(:user) }
 
   before do
+    user.confirm if user.respond_to?(:confirm)
     sign_in user
     driven_by(:rack_test)
     visit profile_setup_path
