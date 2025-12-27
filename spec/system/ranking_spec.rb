@@ -10,6 +10,8 @@ RSpec.describe 'ランキング機能', type: :system do
     let(:osaka_post) { create(:post, user: user, prefecture: other_prefecture) }
 
     before do
+      user.confirm if user.respond_to?(:confirm)
+
       5.times do |i|
         voter = create(:user)
         travel_to (i + 1).day.ago do
