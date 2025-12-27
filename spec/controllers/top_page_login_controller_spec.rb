@@ -6,8 +6,8 @@ RSpec.describe TopPageLoginController, type: :controller do
       let(:user) { create(:user) }
 
       before do
-        @request.env['devise.mapping'] = Devise.mappings[:user]
-        sign_in user
+        user.confirm if user.respond_to?(:confirm) # 1. 認証スキップ
+        sign_in user                               # 2. ログイン
         get :top
       end
 
