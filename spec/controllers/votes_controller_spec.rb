@@ -14,7 +14,7 @@ RSpec.describe VotesController, type: :controller do
 
     context 'when ログイン済みの場合' do
       before do
-        @request.env['devise.mapping'] = Devise.mappings[:user]
+        user.confirm if user.respond_to?(:confirm)
         sign_in user
       end
 

@@ -4,7 +4,9 @@ RSpec.describe Users::SessionsController, type: :controller do
   let(:user) { create(:user) }
 
   before do
-    @request.env['devise.mapping'] = Devise.mappings[:user]
+    user.confirm if user.respond_to?(:confirm)
+    sign_in user
+    request.env['HTTPS'] = 'on' # HTTPSを期待するテストのため追加
   end
 
   describe '#destroy' do

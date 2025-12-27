@@ -5,7 +5,10 @@ RSpec.describe UsersController, type: :controller do
   let(:other_user) { create(:user) }
 
   describe 'ログイン済みのユーザーの場合' do
-    before { sign_in user }
+    before do
+      user.confirm if user.respond_to?(:confirm)
+      sign_in user
+    end
 
     describe 'GET #show' do
       it 'ユーザーの詳細ページを表示できること' do
