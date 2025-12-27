@@ -6,11 +6,15 @@ RSpec.describe '画像アップロード機能', type: :system do
   let(:additional_image_path) { Rails.root.join('spec/fixtures/test_image2.jpg') }
 
   before do
+    user.confirm if user.respond_to?(:confirm)
+
+    # テスト用画像の作成
     FileUtils.mkdir_p(File.dirname(single_image_path))
     [single_image_path, additional_image_path].each do |path|
-      FileUtils.touch(path)
+      FileUtils.touch(path) unless File.exist?(path)
     end
 
+    # Cloudinaryのスタブ（変更なし）
     allow(Cloudinary::Uploader).to receive(:upload).and_return({
       'public_id' => 'test_image',
       'url' => 'http://example.com/test_image.jpg'
@@ -21,8 +25,9 @@ RSpec.describe '画像アップロード機能', type: :system do
   end
 
   describe '投稿画像機能' do
+    let!(:prefecture) { create(:prefecture, name: '東京都') }
+
     before do
-      create(:prefecture, name: '東京都')
       visit new_post_path
     end
 
@@ -55,7 +60,7 @@ RSpec.describe '画像アップロード機能', type: :system do
     it 'プロフィール画像を設定できること' do
       visit edit_mypage_path
 
-      fill_in 'ユーザー名', with: user.username
+      fill_in 'ユーザー名', with: '更新後の名前'
       attach_file 'user[profile_image_url]', single_image_path
       click_button '保存する'
 
