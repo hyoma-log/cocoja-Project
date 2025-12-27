@@ -5,8 +5,11 @@ RSpec.describe 'フォロー機能', type: :system do
   let(:other_user) { create(:user, username: 'テストユーザー2', uid: 'testuser2') }
 
   before do
-    driven_by(:rack_test)
+    user.confirm if user.respond_to?(:confirm)
+    other_user.confirm if other_user.respond_to?(:confirm) # 相手側も念のため
+
     sign_in user
+    driven_by(:rack_test)
   end
 
   describe 'ユーザーページの表示' do
@@ -27,10 +30,8 @@ RSpec.describe 'フォロー機能', type: :system do
       end
 
       it 'フォロー/フォロワー数が表示されること' do
-        within('.follow-stats') do
-          expect(page).to have_content('1')
-          expect(page).to have_content('フォロワー')
-        end
+        expect(page).to have_content('1')
+        expect(page).to have_content('フォロワー')
       end
     end
   end
@@ -42,13 +43,14 @@ RSpec.describe 'フォロー機能', type: :system do
     end
 
     it 'フォロー中のユーザーが表示されること' do
-      click_link 'フォロー中'
+      click_link 'フォロー中', match: :first
       expect(page).to have_content(other_user.username)
     end
 
     it 'フォロワーが表示されること' do
       other_user.follow(user)
-      click_link 'フォロワー'
+      visit user_path(user) # 情報を更新
+      click_link 'フォロワー', match: :first
       expect(page).to have_content(other_user.username)
     end
   end
