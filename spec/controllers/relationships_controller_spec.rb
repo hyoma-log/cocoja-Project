@@ -5,7 +5,11 @@ RSpec.describe RelationshipsController, type: :controller do
   let(:other_user) { create(:user) }
 
   describe 'ログイン済みのユーザーの場合' do
-    before { sign_in user }
+    before do
+      # 重要: メール認証を完了させる
+      user.confirm if user.respond_to?(:confirm)
+      sign_in user
+    end
 
     describe 'POST #create' do
       context 'when 正常な場合' do

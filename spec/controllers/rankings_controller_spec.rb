@@ -1,9 +1,24 @@
 require 'rails_helper'
 
 RSpec.describe RankingsController, type: :controller do
+  # ログイン用のユーザーを追加
+  let(:user) { create(:user) }
+
   describe 'GET #index' do
     let(:tokyo) { create(:prefecture, name: '東京都') }
     let(:osaka) { create(:prefecture, name: '大阪府') }
+
+    before do
+      user.confirm if user.respond_to?(:confirm)
+      sign_in user
+      # 安定した週計算のため時間を固定
+      travel_to Time.zone.local(2025, 12, 28)
+    end
+
+    after do
+      # 時間固定を解除
+      travel_back
+    end
 
     context 'when 現在の週のランキングが存在する場合' do
       let!(:top_ranking) do
@@ -26,13 +41,16 @@ RSpec.describe RankingsController, type: :controller do
       before { get :index }
 
       it '現在の週のランキングを取得すること' do
-        expect(controller.instance_variable_get(:@current_rankings))
-          .to contain_exactly(top_ranking, second_ranking)
+        rankings = controller.instance_variable_get(:@current_rankings)
+        # 期待値がHash形式のため、中身の値を検証する
+        expect(rankings.first[:points]).to eq(100)
+        expect(rankings.first[:prefecture].name).to eq('東京都')
       end
 
       it 'ランキング順に並んでいること' do
         rankings = controller.instance_variable_get(:@current_rankings)
-        expect(rankings.to_a).to eq([top_ranking, second_ranking])
+        # pointsの降順であることを確認
+        expect(rankings.map { |r| r[:points] }).to eq([100, 50])
       end
     end
 
@@ -48,14 +66,15 @@ RSpec.describe RankingsController, type: :controller do
 
       it 'リアルタイムでランキングを正しく計算すること' do
         rankings = controller.instance_variable_get(:@current_rankings)
+        # Hash形式なので [] でアクセス
         expect(rankings.length).to eq(2)
-        expect(rankings.first.prefecture).to eq(tokyo)
+        expect(rankings.first[:prefecture]).to eq(tokyo)
       end
 
       it 'ランキングの順位が正しく設定されていること' do
         rankings = controller.instance_variable_get(:@current_rankings)
-        expect(rankings.first.rank).to eq(1)
-        expect(rankings.second.rank).to eq(2)
+        expect(rankings.first[:rank]).to eq(1)
+        expect(rankings.second[:rank]).to eq(2)
       end
     end
 
@@ -72,8 +91,10 @@ RSpec.describe RankingsController, type: :controller do
       before { get :index }
 
       it '前週のランキングを取得すること' do
-        expect(controller.instance_variable_get(:@previous_rankings))
-          .to include(previous_ranking)
+        rankings = controller.instance_variable_get(:@previous_rankings)
+        # include(model) ではなく Hash の中身を確認
+        expect(rankings.first[:prefecture]).to eq(tokyo)
+        expect(rankings.first[:points]).to eq(100)
       end
     end
   end
