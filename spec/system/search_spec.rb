@@ -6,7 +6,9 @@ RSpec.describe 'Search', type: :system do
   let!(:hashtag) { create(:hashtag, name: 'systemtesthashtag') }
 
   before do
+    user.confirm if user.respond_to?(:confirm)
     sign_in user
+    driven_by(:rack_test)
   end
 
   describe '検索UI' do
