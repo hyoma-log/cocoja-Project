@@ -5,6 +5,7 @@ RSpec.describe 'ユーザー認証', type: :system do
 
   describe 'ログイン' do
     before do
+      user.confirm if user.respond_to?(:confirm)
       driven_by(:rack_test)
       visit new_user_session_path
     end
@@ -34,16 +35,17 @@ RSpec.describe 'ユーザー認証', type: :system do
 
   describe 'ログアウト' do
     before do
+      user.confirm if user.respond_to?(:confirm)
       sign_in user
       driven_by(:rack_test)
       visit settings_index_path
     end
 
     it 'ログアウトに成功すること' do
-      find('button[data-modal-target="logout-modal"]').click
+      click_on 'ログアウト', match: :first
 
       within('#logout-modal') do
-        find('button[type="submit"]').click
+        click_on 'ログアウト'
       end
 
       expect(page).to have_content 'ログアウトしました'

@@ -1,16 +1,16 @@
 source 'https://rubygems.org'
 
+gem 'bootsnap', require: false
 gem 'cssbundling-rails'
 gem 'jbuilder'
 gem 'jsbundling-rails'
 gem 'pg', '~> 1.1'
 gem 'puma', '>= 5.0'
-gem 'rails', '~> 7.1.5'
+gem 'rails', '~> 7.2.0'
+gem 'redis', '~> 5.0'
+gem 'sprockets-rails'
 gem 'stimulus-rails'
 gem 'turbo-rails'
-gem 'sprockets-rails'
-gem 'redis', '~> 5.0'
-gem 'bootsnap', require: false
 gem 'tzinfo-data', platforms: %i[windows jruby]
 
 group :development, :test do
@@ -38,13 +38,13 @@ group :test do
   gem 'webdrivers', '~> 5.3'
 end
 
-gem 'mini_magick'
 gem 'carrierwave'
 gem 'cloudinary', '~> 2.3'
 gem 'concurrent-ruby', '~> 1.2'
 gem 'devise'
 gem 'kaminari'
 gem 'meta-tags'
+gem 'mini_magick'
 gem 'oj'
 gem 'rack-cors'
 gem 'rails-i18n'

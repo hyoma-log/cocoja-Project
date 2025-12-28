@@ -1,5 +1,5 @@
 class StaticPagesGuestController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:top], if: -> { respond_to?(:authenticate_user!) }
+  skip_before_action :authenticate_user!, only: [:top]
 
   before_action :redirect_if_authenticated, only: [:top]
 

@@ -9,6 +9,8 @@ RSpec.describe Users::RegistrationsController, type: :controller do
     let(:valid_params) do
       {
         user: {
+          username: 'テストユーザー',
+          uid: 'testuser777',
           email: 'test@example.com',
           password: 'password',
           password_confirmation: 'password'
@@ -38,6 +40,8 @@ RSpec.describe Users::RegistrationsController, type: :controller do
       let(:invalid_params) do
         {
           user: {
+            username: 'テストユーザー',
+            uid: 'testuser777',
             email: '',
             password: 'password',
             password_confirmation: 'different'

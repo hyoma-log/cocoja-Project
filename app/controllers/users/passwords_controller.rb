@@ -1,6 +1,5 @@
 module Users
   class PasswordsController < Devise::PasswordsController
-
     def create
       self.resource = resource_class.send_reset_password_instructions(resource_params)
       yield resource if block_given?
@@ -8,7 +7,7 @@ module Users
       if successfully_sent?(resource)
 
         flash[:notice] = I18n.t('devise.passwords.send_instructions')
-        return redirect_to new_user_session_path
+        redirect_to new_user_session_path
       else
         respond_with(resource)
       end
