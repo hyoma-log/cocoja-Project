@@ -25,7 +25,7 @@ RSpec.describe PostImage, type: :model do
     end
 
     it 'accepts valid image files' do
-      file = File.open(Rails.root.join('spec/fixtures/files/test_image.jpg'))
+      file = Rails.root.join('spec/fixtures/files/test_image.jpg').open
       post_image.image = file
 
       expect(post_image.save(validate: false)).to be_truthy

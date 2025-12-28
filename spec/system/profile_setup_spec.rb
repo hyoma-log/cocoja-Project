@@ -1,26 +1,28 @@
 require 'rails_helper'
 
 RSpec.describe 'ProfileSetupService', type: :model do
-  class ProfileSetupService
-    attr_reader :user, :params, :errors
+  before do
+    stub_const('ProfileSetupService', Class.new do
+      attr_reader :user, :params, :errors
 
-    def initialize(user)
-      @user = user
-      @errors = []
-    end
-
-    def update(params)
-      user.username = params[:username] if params[:username]
-      user.uid = params[:uid] if params[:uid]
-      user.bio = params[:bio] if params[:bio]
-
-      if user.save
-        true
-      else
-        @errors = user.errors.full_messages
-        false
+      def initialize(user)
+        @user = user
+        @errors = []
       end
-    end
+
+      def update(params)
+        user.username = params[:username] if params[:username]
+        user.uid = params[:uid] if params[:uid]
+        user.bio = params[:bio] if params[:bio]
+
+        if user.save
+          true
+        else
+          @errors = user.errors.full_messages
+          false
+        end
+      end
+    end)
   end
 
   let(:user) { create(:user, confirmed_at: Time.current) }

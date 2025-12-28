@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'bootsnap', require: false
+gem 'connection_pool', '2.4.1'
 gem 'cssbundling-rails'
 gem 'jbuilder'
 gem 'jsbundling-rails'
@@ -8,7 +9,6 @@ gem 'pg', '~> 1.1'
 gem 'puma', '>= 5.0'
 gem 'rails', '~> 7.2.0'
 gem 'redis', '>= 5.0'
-gem 'connection_pool', '2.4.1'
 gem 'sprockets-rails'
 gem 'stimulus-rails'
 gem 'turbo-rails'
@@ -19,11 +19,11 @@ group :development, :test do
   gem 'debug', platforms: %i[mri windows]
   gem 'factory_bot_rails', '~> 6.4'
   gem 'faker', '~> 3.3'
+  gem 'rails-controller-testing'
   gem 'rspec-rails', '~> 7.1'
   gem 'rubocop-rails-omakase', require: false
   gem 'rubocop-rspec', require: false
   gem 'rubocop-rspec_rails', require: false
-  gem 'rails-controller-testing'
 end
 
 group :development do
@@ -37,6 +37,7 @@ group :test do
   gem 'shoulda-matchers', '~> 6.1'
   gem 'simplecov', '~> 0.22', require: false
   # gem 'webdrivers', '~> 5.3'
+  gem 'selenium-webdriver'
 end
 
 gem 'carrierwave'

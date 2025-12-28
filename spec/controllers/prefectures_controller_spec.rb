@@ -3,9 +3,8 @@ require 'rails_helper'
 RSpec.describe PrefecturesController, type: :controller do
   before do
     if defined?(controller.request)
-      allow(controller).to receive(:authenticate_user!).and_return(true)
-      allow(controller).to receive(:user_signed_in?).and_return(true)
-      allow(controller).to receive(:current_user).and_return(create(:user))
+      allow(controller).to receive_messages(authenticate_user!: true, user_signed_in?: true,
+current_user: create(:user))
     end
   end
 
@@ -19,8 +18,7 @@ RSpec.describe PrefecturesController, type: :controller do
       let!(:post_with_zero_points) { create(:post, prefecture: prefecture) }
 
       before do
-        allow(controller).to receive(:authenticate_user!).and_return(true)
-        allow(controller).to receive(:user_signed_in?).and_return(true)
+        allow(controller).to receive_messages(authenticate_user!: true, user_signed_in?: true)
 
         create(:vote, post: post_with_high_votes, points: 5)
         create(:vote, post: post_with_high_votes, points: 3)
@@ -60,8 +58,7 @@ RSpec.describe PrefecturesController, type: :controller do
 
     context '投稿が存在しない場合' do
       before do
-        allow(controller).to receive(:authenticate_user!).and_return(true)
-        allow(controller).to receive(:user_signed_in?).and_return(true)
+        allow(controller).to receive_messages(authenticate_user!: true, user_signed_in?: true)
 
         get :show, params: { id: prefecture.id }
       end
@@ -86,7 +83,7 @@ RSpec.describe PrefecturesController, type: :controller do
     context '存在しない都道府県IDの場合' do
       it 'ActiveRecord::RecordNotFoundを発生させること' do
         allow(controller).to receive(:authenticate_user!).and_return(true)
-        allow(Prefecture).to receive(:find).with("999").and_raise(ActiveRecord::RecordNotFound)
+        allow(Prefecture).to receive(:find).with('999').and_raise(ActiveRecord::RecordNotFound)
 
         expect {
           get :show, params: { id: 999 }
@@ -103,8 +100,7 @@ RSpec.describe PrefecturesController, type: :controller do
       let!(:old_post) { create(:post, prefecture: prefecture, created_at: 2.days.ago) }
 
       before do
-        allow(controller).to receive(:authenticate_user!).and_return(true)
-        allow(controller).to receive(:user_signed_in?).and_return(true)
+        allow(controller).to receive_messages(authenticate_user!: true, user_signed_in?: true)
 
         get :posts, params: { id: prefecture.id }
       end
@@ -137,8 +133,7 @@ RSpec.describe PrefecturesController, type: :controller do
 
     context 'JSONフォーマットでリクエストした場合' do
       before do
-        allow(controller).to receive(:authenticate_user!).and_return(true)
-        allow(controller).to receive(:user_signed_in?).and_return(true)
+        allow(controller).to receive_messages(authenticate_user!: true, user_signed_in?: true)
 
         create(:post, prefecture: prefecture)
         get :posts, params: { id: prefecture.id, format: :json }
@@ -153,7 +148,7 @@ RSpec.describe PrefecturesController, type: :controller do
       end
 
       it '投稿データを含むことを確認' do
-        json_response = JSON.parse(response.body)
+        json_response = response.parsed_body
         expect(json_response).to have_key('posts')
         expect(json_response).to have_key('next_page')
       end
@@ -162,7 +157,7 @@ RSpec.describe PrefecturesController, type: :controller do
     context '存在しない都道府県IDの場合' do
       it 'ActiveRecord::RecordNotFoundを発生させること' do
         allow(controller).to receive(:authenticate_user!).and_return(true)
-        allow(Prefecture).to receive(:find).with("999").and_raise(ActiveRecord::RecordNotFound)
+        allow(Prefecture).to receive(:find).with('999').and_raise(ActiveRecord::RecordNotFound)
 
         expect {
           get :posts, params: { id: 999 }

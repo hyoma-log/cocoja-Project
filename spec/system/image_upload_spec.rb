@@ -30,7 +30,7 @@ RSpec.describe '画像アップロード機能', type: :model do
       post.post_images.build(image: File.open(single_image_path))
 
       expect(post.save(validate: false)).to be_truthy
-      expect(post.persisted?).to be_truthy
+      expect(post).to be_persisted
       expect(post.post_images.count).to eq(1)
     end
 

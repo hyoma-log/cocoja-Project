@@ -43,9 +43,9 @@ RSpec.describe 'マイページ機能', type: :model do
       it '更新に失敗すること' do
         user.username = ''
 
-        expect(user.valid?).to be_falsey
+        expect(user).not_to be_valid
         expect(user.save).to be_falsey
-        expect(user.errors[:username]).to include("を入力してください")
+        expect(user.errors[:username]).to include('を入力してください')
       end
     end
   end

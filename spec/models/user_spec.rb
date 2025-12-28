@@ -2,28 +2,28 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   describe 'validations' do
-    subject { create(:user) }
+    subject(:user) { create(:user) }
 
     it { is_expected.to validate_presence_of(:email) }
 
     context 'email uniqueness' do
-      subject { create(:user) }
+      subject(:user) { create(:user) }
 
       it 'validates uniqueness of email' do
-        dup_user = build(:user, email: subject.email)
+        dup_user = build(:user, email: user.email)
         expect(dup_user).not_to be_valid
         expect(dup_user.errors[:email]).to include('は既に使用されています')
       end
 
       it 'validates case insensitive uniqueness of email' do
-        dup_user = build(:user, email: subject.email.upcase)
+        dup_user = build(:user, email: user.email.upcase)
         expect(dup_user).not_to be_valid
         expect(dup_user.errors[:email]).to include('は既に使用されています')
       end
     end
 
     context 'when on update' do
-      subject { create(:user) }
+      subject(:user) { create(:user) }
 
       it { is_expected.to validate_presence_of(:username).on(:update) }
       it { is_expected.to validate_length_of(:username).is_at_least(1).is_at_most(20).on(:update) }

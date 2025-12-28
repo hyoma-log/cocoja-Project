@@ -4,24 +4,6 @@ RSpec.describe RelationshipsController, type: :controller do
   let(:user) { create(:user) }
   let(:other_user) { create(:user) }
 
-  before(:all) do
-    unless User.method_defined?(:follow)
-      User.class_eval do
-        def follow(other_user)
-          true
-        end
-
-        def unfollow(other_user)
-          true
-        end
-
-        def following?(other_user)
-          false
-        end
-      end
-    end
-  end
-
   describe '未ログインユーザーの場合' do
     describe 'POST #create' do
       it 'ログインページにリダイレクトすること' do
@@ -42,16 +24,13 @@ RSpec.describe RelationshipsController, type: :controller do
     before do
       allow(request.env['warden']).to receive(:authenticate!).and_return(user)
       allow(controller).to receive(:current_user).and_return(user)
-
-      allow(user).to receive(:follow).and_return(true)
-      allow(user).to receive(:unfollow).and_return(true)
-      allow(user).to receive(:following?).and_return(false)
+      allow(user).to receive_messages(follow: true, unfollow: true, following?: false)
     end
 
     describe 'POST #create' do
       it 'フォロー関係を作成すること' do
-        expect(user).to receive(:follow).with(an_instance_of(User))
         post :create, params: { user_id: other_user.id }
+        expect(user).to have_received(:follow).with(an_instance_of(User))
       end
 
       context 'HTML形式の場合' do
@@ -75,8 +54,8 @@ RSpec.describe RelationshipsController, type: :controller do
       end
 
       it 'フォロー関係を削除すること' do
-        expect(user).to receive(:unfollow).with(an_instance_of(User))
         delete :destroy, params: { user_id: other_user.id }
+        expect(user).to have_received(:unfollow).with(an_instance_of(User))
       end
 
       context 'HTML形式の場合' do

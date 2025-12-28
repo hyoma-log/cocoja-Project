@@ -28,16 +28,16 @@ RSpec.describe 'ハッシュタグ機能', type: :request do
           end
         }.to change(Post, :count).by(1)
 
-        post = Post.last
+        last_post = Post.last
 
-        expect(post.content).to eq(post_content)
-        expect(post.hashtags.pluck(:name)).to contain_exactly('観光', 'グルメ')
+        expect(last_post.content).to eq(post_content)
+        expect(last_post.hashtags.pluck(:name)).to contain_exactly('観光', 'グルメ')
       end
 
       it '投稿詳細でハッシュタグが表示されること' do
         post_item = create(:post, user: user, prefecture: prefecture, content: 'テスト投稿です #観光 #グルメ')
 
-        ['観光', 'グルメ'].each do |tag_name|
+        %w[観光 グルメ].each do |tag_name|
           tag = Hashtag.find_or_create_by(name: tag_name)
           post_item.post_hashtags.create(hashtag: tag)
         end
@@ -53,38 +53,36 @@ RSpec.describe 'ハッシュタグ機能', type: :request do
     end
 
     context 'ハッシュタグによる投稿検索' do
+      # @post1, @post2 を let! に置き換え
+      let!(:post_kanko) { create(:post, user: user, prefecture: prefecture, content: '観光スポット #観光') }
+      let!(:post_gourmet) { create(:post, user: user, prefecture: prefecture, content: 'ランチ #グルメ') }
+      let!(:tag_kanko) { Hashtag.find_or_create_by(name: '観光') }
+      let!(:tag_gourmet) { Hashtag.find_or_create_by(name: 'グルメ') }
+
       before do
-        @post1 = create(:post, user: user, prefecture: prefecture, content: '観光スポット #観光')
-        @post2 = create(:post, user: user, prefecture: prefecture, content: 'ランチ #グルメ')
-
-        tag1 = Hashtag.find_or_create_by(name: '観光')
-        tag2 = Hashtag.find_or_create_by(name: 'グルメ')
-
-        @post1.post_hashtags.create(hashtag: tag1)
-        @post2.post_hashtags.create(hashtag: tag2)
+        post_kanko.post_hashtags.create(hashtag: tag_kanko)
+        post_gourmet.post_hashtags.create(hashtag: tag_gourmet)
       end
 
       it 'ハッシュタグページで関連投稿のみが表示されること' do
-        tag = Hashtag.find_by(name: '観光')
-        get hashtag_posts_path(name: tag.name)
+        get hashtag_posts_path(name: tag_kanko.name)
 
         expect(response).to be_successful
 
-        posts = tag.posts
-        expect(posts).to include(@post1)
-        expect(posts).not_to include(@post2)
+        posts = tag_kanko.posts
+        expect(posts).to include(post_kanko)
+        expect(posts).not_to include(post_gourmet)
       end
 
       it '投稿一覧からハッシュタグで絞り込みができること' do
         get posts_path
         expect(response).to be_successful
 
-        tag = Hashtag.find_by(name: '観光')
-        get hashtag_posts_path(name: tag.name)
+        get hashtag_posts_path(name: tag_kanko.name)
         expect(response).to be_successful
 
-        expect(tag.posts).to include(@post1)
-        expect(tag.posts).not_to include(@post2)
+        expect(tag_kanko.posts).to include(post_kanko)
+        expect(tag_kanko.posts).not_to include(post_gourmet)
       end
     end
   end

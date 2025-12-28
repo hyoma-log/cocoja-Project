@@ -30,9 +30,7 @@ RSpec.describe ProfilesController, type: :controller do
         allow(user).to receive(:confirmed?).and_return(true)
       end
 
-      allow(controller).to receive(:current_user).and_return(user)
-      allow(controller).to receive(:authenticate_user!).and_return(true)
-      allow(controller).to receive(:user_signed_in?).and_return(true)
+      allow(controller).to receive_messages(current_user: user, authenticate_user!: true, user_signed_in?: true)
     end
 
     describe 'GET #setup' do
@@ -86,13 +84,12 @@ RSpec.describe ProfilesController, type: :controller do
 
       context 'when 無効なパラメータの場合' do
         let(:invalid_attributes) { { username: '' } }
-        let(:error_messages) { ["ユーザー名を入力してください"] }
+        let(:error_messages) { ['ユーザー名を入力してください'] }
 
         before do
-          allow(user).to receive(:update).and_return(false)
-          errors = double("Errors")
+          errors = instance_double(ActiveModel::Errors)
           allow(errors).to receive(:full_messages).and_return(error_messages)
-          allow(user).to receive(:errors).and_return(errors)
+          allow(user).to receive_messages(update: false, errors: errors)
           patch :update, params: { user: invalid_attributes }
         end
 

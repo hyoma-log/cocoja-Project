@@ -6,7 +6,7 @@ Rails.application.configure do
   config.consider_all_requests_local = false
 
   config.cache_store = :redis_cache_store, {
-    url: ENV['REDIS_URL'],
+    url: ENV.fetch('REDIS_URL', nil),
     namespace: 'cache',
     expires_in: 1.day
   }

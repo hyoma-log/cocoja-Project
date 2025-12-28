@@ -16,9 +16,7 @@ RSpec.describe VotesController, type: :controller do
       before do
         allow(request.env['warden']).to receive(:authenticate!).and_return(user)
         allow(controller).to receive(:current_user).and_return(user)
-        allow(user).to receive(:remaining_daily_points).and_return(5)
-        allow(user).to receive(:can_vote?).and_return(true)
-        allow(user).to receive(:votes).and_return(Vote.where(user_id: user.id))
+        allow(user).to receive_messages(remaining_daily_points: 5, can_vote?: true, votes: Vote.where(user_id: user.id))
         allow(Post).to receive(:find).and_return(post_item)
       end
 
@@ -61,8 +59,10 @@ RSpec.describe VotesController, type: :controller do
 
         before do
           invalid_vote = Vote.new(points: 0, user: user, post: post_item)
-          allow(invalid_vote).to receive(:save).and_return(false)
-          allow(invalid_vote).to receive(:errors).and_return(double(full_messages: ['ポイントは1以上である必要があります']))
+          allow(invalid_vote).to receive_messages(
+            save: false,
+            errors: instance_double(ActiveModel::Errors, full_messages: ['ポイントは1以上である必要があります'])
+          )
           allow_any_instance_of(user.votes.class).to receive(:build).and_return(invalid_vote)
         end
 
@@ -84,7 +84,7 @@ RSpec.describe VotesController, type: :controller do
           allow(user).to receive(:can_vote?).with(2).and_return(false)
 
           allow(controller).to receive(:check_vote_permissions) do
-            controller.flash[:alert] = "残りポイント不足です（残り1ポイント）"
+            controller.flash[:alert] = '残りポイント不足です（残り1ポイント）'
             controller.redirect_to(post_item)
             false
           end

@@ -13,7 +13,7 @@ RSpec.describe '投稿機能', type: :model do
       )
 
       expect(post.save(validate: false)).to be_truthy
-      expect(post.persisted?).to be_truthy
+      expect(post).to be_persisted
       expect(post.content).to eq('テスト投稿です')
       expect(post.user).to eq(user)
       expect(post.prefecture).to eq(prefecture)

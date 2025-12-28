@@ -10,8 +10,7 @@ RSpec.describe Users::SessionsController, type: :controller do
   describe '#destroy' do
     before do
       allow(request.env['warden']).to receive(:authenticate!).and_return(user)
-      allow(controller).to receive(:current_user).and_return(user)
-      allow(controller).to receive(:sign_out).and_return(true)
+      allow(controller).to receive_messages(current_user: user, sign_out: true)
     end
 
     it 'ログアウト後にリダイレクトされること' do
@@ -22,7 +21,7 @@ RSpec.describe Users::SessionsController, type: :controller do
     end
 
     it 'ログアウトメッセージを表示すること' do
-      allow(controller).to receive(:redirect_to) do |path, options|
+      allow(controller).to receive(:redirect_to) do |_path, _options|
         controller.flash[:notice] = I18n.t('controllers.users.sessions.signed_out')
       end
 
