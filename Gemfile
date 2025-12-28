@@ -7,7 +7,8 @@ gem 'jsbundling-rails'
 gem 'pg', '~> 1.1'
 gem 'puma', '>= 5.0'
 gem 'rails', '~> 7.2.0'
-gem 'redis', '~> 5.0'
+gem 'redis', '>= 5.0'
+gem 'connection_pool', '2.4.1'
 gem 'sprockets-rails'
 gem 'stimulus-rails'
 gem 'turbo-rails'
@@ -32,10 +33,10 @@ end
 group :test do
   gem 'capybara', '~> 3.40'
   gem 'database_cleaner-active_record', '~> 2.1'
-  gem 'rails-controller-testing'
+  # gem 'rails-controller-testing'
   gem 'shoulda-matchers', '~> 6.1'
   gem 'simplecov', '~> 0.22', require: false
-  gem 'webdrivers', '~> 5.3'
+  # gem 'webdrivers', '~> 5.3'
 end
 
 gem 'carrierwave'
@@ -48,7 +49,7 @@ gem 'mini_magick'
 gem 'oj'
 gem 'rack-cors'
 gem 'rails-i18n'
-gem 'sidekiq'
+gem 'sidekiq', '>= 7.0'
 
 gem 'omniauth'
 gem 'omniauth-google-oauth2'

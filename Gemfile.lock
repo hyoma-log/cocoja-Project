@@ -110,7 +110,7 @@ GEM
       faraday-multipart (~> 1.0, >= 1.0.4)
       ostruct
     concurrent-ruby (1.3.6)
-    connection_pool (3.0.2)
+    connection_pool (2.4.1)
     crass (1.0.6)
     cssbundling-rails (1.4.2)
       railties (>= 6.0.0)
@@ -176,7 +176,7 @@ GEM
       activesupport (>= 5.0.0)
     jsbundling-rails (1.3.1)
       railties (>= 6.0.0)
-    json (2.12.0)
+    json (2.18.0)
     jwt (2.10.1)
       base64
     kaminari (1.2.2)
@@ -346,9 +346,9 @@ GEM
       erb
       psych (>= 4.0.0)
       tsort
-    redis (5.4.0)
+    redis (5.4.1)
       redis-client (>= 0.22.0)
-    redis-client (0.24.0)
+    redis-client (0.26.2)
       connection_pool
     regexp_parser (2.10.0)
     reline (0.6.3)
@@ -356,7 +356,6 @@ GEM
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
-    rexml (3.4.1)
     rspec-core (3.13.3)
       rspec-support (~> 3.13.0)
     rspec-expectations (3.13.4)
@@ -413,20 +412,15 @@ GEM
     ruby-vips (2.2.3)
       ffi (~> 1.12)
       logger
-    rubyzip (2.4.1)
     securerandom (0.4.1)
-    selenium-webdriver (4.10.0)
-      rexml (~> 3.2, >= 3.2.5)
-      rubyzip (>= 1.2.2, < 3.0)
-      websocket (~> 1.0)
     shoulda-matchers (6.5.0)
       activesupport (>= 5.2.0)
-    sidekiq (8.0.3)
-      connection_pool (>= 2.5.0)
-      json (>= 2.9.0)
-      logger (>= 1.6.2)
-      rack (>= 3.1.0)
-      redis-client (>= 0.23.2)
+    sidekiq (7.3.10)
+      base64
+      connection_pool (>= 2.3.0, < 3)
+      logger
+      rack (>= 2.2.4, < 3.3)
+      redis-client (>= 0.23.0, < 1)
     simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -468,11 +462,6 @@ GEM
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
       railties (>= 6.0.0)
-    webdrivers (5.3.1)
-      nokogiri (~> 1.6)
-      rubyzip (>= 1.3.0)
-      selenium-webdriver (~> 4.0, < 4.11)
-    websocket (1.2.11)
     websocket-driver (0.8.0)
       base64
       websocket-extensions (>= 0.1.0)
@@ -500,6 +489,7 @@ DEPENDENCIES
   carrierwave
   cloudinary (~> 2.3)
   concurrent-ruby (~> 1.2)
+  connection_pool (= 2.4.1)
   cssbundling-rails
   database_cleaner-active_record (~> 2.1)
   debug
@@ -521,20 +511,19 @@ DEPENDENCIES
   rails (~> 7.2.0)
   rails-controller-testing
   rails-i18n
-  redis (~> 5.0)
+  redis (>= 5.0)
   rspec-rails (~> 7.1)
   rubocop-rails-omakase
   rubocop-rspec
   rubocop-rspec_rails
   shoulda-matchers (~> 6.1)
-  sidekiq
+  sidekiq (>= 7.0)
   simplecov (~> 0.22)
   sprockets-rails
   stimulus-rails
   turbo-rails
   tzinfo-data
   web-console
-  webdrivers (~> 5.3)
 
 BUNDLED WITH
    2.6.3
