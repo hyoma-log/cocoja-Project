@@ -24,9 +24,9 @@ module PostCreatable
     if post_created
       begin
         process_image_upload
-      rescue => e
+      rescue StandardError => e
         Rails.logger.error("画像処理エラー: #{e.message}")
-        flash[:alert] = "一部の画像のアップロードに失敗しました。投稿は保存されています。"
+        flash[:alert] = '一部の画像のアップロードに失敗しました。投稿は保存されています。'
       end
 
       redirect_to posts_url and return
@@ -39,18 +39,19 @@ module PostCreatable
 
   def process_image_upload
     return unless params[:post_images].present? && params[:post_images][:image].present?
-    image_files = params[:post_images][:image].reject(&:blank?)
+
+    # reject(&:blank?) を compact_blank に変更
+    image_files = params[:post_images][:image].compact_blank
     return if image_files.blank?
+
     total_images = image_files.size
-    @post.update_column(:post_images_count, 0)
+    @post.update_column(:post_images_count, 0) # rubocop:disable Rails/SkipsModelValidations
     optimized_images = []
     image_files.each_with_index do |file, index|
-      begin
-        optimized_file = optimize_image_fast(file)
-        optimized_images << { file: optimized_file, index: index }
-      rescue => e
-        Rails.logger.error("画像#{index}の最適化に失敗: #{e.message}")
-      end
+      optimized_file = optimize_image_fast(file)
+      optimized_images << { file: optimized_file, index: index }
+    rescue StandardError => e
+      Rails.logger.error("画像#{index}の最適化に失敗: #{e.message}")
     end
 
     processed_count = 0
@@ -59,21 +60,22 @@ module PostCreatable
     Cloudinary.config.timeout = 20
 
     optimized_images.each do |item|
-      begin
-        post_image = @post.post_images.new
-        post_image.image = item[:file]
+      post_image = @post.post_images.new
+      post_image.image = item[:file]
 
-        if post_image.save
-          processed_count += 1
-          @post.post_images_count = processed_count
-          Rails.logger.info("画像 #{processed_count}/#{total_images} アップロード完了: ID=#{post_image.id}")
-        end
-      rescue => e
-        Rails.logger.error("画像#{item[:index]}アップロードエラー: #{e.message}")
+      if post_image.save
+        processed_count += 1
+        @post.post_images_count = processed_count
+        Rails.logger.info("画像 #{processed_count}/#{total_images} アップロード完了: ID=#{post_image.id}")
       end
+    rescue StandardError => e
+      Rails.logger.error("画像#{item[:index]}アップロードエラー: #{e.message}")
     end
 
-    @post.update_column(:post_images_count, processed_count) if processed_count > 0
+    # update_column への rubocop:disable 追記と、positive? への変更
+    return unless processed_count.positive?
+
+    @post.update_column(:post_images_count, processed_count) # rubocop:disable Rails/SkipsModelValidations
   end
 
   def optimize_image_fast(image)
@@ -81,13 +83,14 @@ module PostCreatable
 
     begin
       return image if image.size < 500.kilobytes
+
       temp_file = Tempfile.new(['opt', File.extname(image.original_filename).presence || '.jpg'], binmode: true)
 
       MiniMagick::Tool::Convert.new do |convert|
         convert << image.tempfile.path
         convert.strip
         convert.auto_orient
-        convert.resize("1200x1200>")
+        convert.resize('1200x1200>')
         convert.quality(85)
         convert << temp_file.path
       end
@@ -97,7 +100,7 @@ module PostCreatable
         filename: image.original_filename,
         type: image.content_type
       )
-    rescue => e
+    rescue StandardError => e
       Rails.logger.error("画像最適化エラー: #{e.message}")
       image
     end
@@ -113,6 +116,7 @@ module PostCreatable
 
   def max_images_exceeded?
     return false unless params[:post_images] && params[:post_images][:image].present?
+
     params[:post_images][:image].compact_blank.count > MAX_IMAGES
   end
 

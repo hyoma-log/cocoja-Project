@@ -15,22 +15,22 @@ RSpec.describe Post, type: :model do
     describe 'post_images_count_within_limit' do
       let(:post) { build(:post) }
 
-      context 'when post has 10 or fewer images' do
+      context 'when post has 5 or fewer images' do
         before do
-          10.times { post.post_images.build(image: 'test.jpg') }
+          5.times { post.post_images.build(image: 'test.jpg') }
         end
 
         it { expect(post).to be_valid }
       end
 
-      context 'when post has more than 10 images' do
+      context 'when post has more than 5 images' do
         before do
-          11.times { post.post_images.build(image: 'test.jpg') }
+          6.times { post.post_images.build(image: 'test.jpg') }
         end
 
         it 'is invalid with error message' do
           expect(post).not_to be_valid
-          expect(post.errors[:post_images]).to include('は10枚まで投稿できます')
+          expect(post.errors[:post_images]).to include('は5枚まで投稿できます')
         end
       end
     end

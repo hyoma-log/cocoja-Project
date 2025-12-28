@@ -24,6 +24,7 @@ class WeeklyRanking < ApplicationRecord
     prev_ranking = WeeklyRanking.previous_week.find_by(prefecture_id: prefecture_id)
 
     return nil unless prev_ranking
+
     prev_ranking.rank - rank
   end
 end

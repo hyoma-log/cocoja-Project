@@ -1,16 +1,17 @@
 source 'https://rubygems.org'
 
+gem 'bootsnap', require: false
+gem 'connection_pool', '2.4.1'
 gem 'cssbundling-rails'
 gem 'jbuilder'
 gem 'jsbundling-rails'
 gem 'pg', '~> 1.1'
 gem 'puma', '>= 5.0'
-gem 'rails', '~> 7.1.5'
+gem 'rails', '~> 7.2.0'
+gem 'redis', '>= 5.0'
+gem 'sprockets-rails'
 gem 'stimulus-rails'
 gem 'turbo-rails'
-gem 'sprockets-rails'
-gem 'redis', '~> 5.0'
-gem 'bootsnap', require: false
 gem 'tzinfo-data', platforms: %i[windows jruby]
 
 group :development, :test do
@@ -18,6 +19,7 @@ group :development, :test do
   gem 'debug', platforms: %i[mri windows]
   gem 'factory_bot_rails', '~> 6.4'
   gem 'faker', '~> 3.3'
+  gem 'rails-controller-testing'
   gem 'rspec-rails', '~> 7.1'
   gem 'rubocop-rails-omakase', require: false
   gem 'rubocop-rspec', require: false
@@ -31,23 +33,24 @@ end
 group :test do
   gem 'capybara', '~> 3.40'
   gem 'database_cleaner-active_record', '~> 2.1'
-  gem 'rails-controller-testing'
+  # gem 'rails-controller-testing'
   gem 'shoulda-matchers', '~> 6.1'
   gem 'simplecov', '~> 0.22', require: false
-  gem 'webdrivers', '~> 5.3'
+  # gem 'webdrivers', '~> 5.3'
+  gem 'selenium-webdriver'
 end
 
-gem 'mini_magick'
 gem 'carrierwave'
 gem 'cloudinary', '~> 2.3'
 gem 'concurrent-ruby', '~> 1.2'
 gem 'devise'
 gem 'kaminari'
 gem 'meta-tags'
+gem 'mini_magick'
 gem 'oj'
 gem 'rack-cors'
 gem 'rails-i18n'
-gem 'sidekiq'
+gem 'sidekiq', '>= 7.0'
 
 gem 'omniauth'
 gem 'omniauth-google-oauth2'

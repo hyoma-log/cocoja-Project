@@ -5,7 +5,8 @@ class Post < ApplicationRecord
   has_many :post_hashtags, dependent: :destroy
   has_many :hashtags, through: :post_hashtags
   has_many :votes, dependent: :destroy
-  has_many :post_images, -> { order(created_at: :asc) }, dependent: :destroy, autosave: false
+  # inverse_of: :post を追加
+  has_many :post_images, -> { order(created_at: :asc) }, dependent: :destroy, autosave: false, inverse_of: :post
 
   accepts_nested_attributes_for :post_images, allow_destroy: true
 
@@ -14,7 +15,7 @@ class Post < ApplicationRecord
 
   after_create :create_hashtags
 
-  scope :with_associations, -> {
+  scope :with_associations, lambda {
     includes(:prefecture, :user, :hashtags, :post_images)
   }
 
@@ -29,7 +30,9 @@ class Post < ApplicationRecord
   end
 
   def increment_images_count!
+    # rubocop:disable Rails/SkipsModelValidations
     increment!(:post_images_count)
+    # rubocop:enable Rails/SkipsModelValidations
   end
 
   private

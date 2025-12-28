@@ -1,6 +1,6 @@
 module TurboHelper
   def turbo_frame_request?
-    request.headers["Turbo-Frame"].present?
+    request.headers['Turbo-Frame'].present?
   end
 
   def turbo_stream_request?

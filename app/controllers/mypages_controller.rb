@@ -9,7 +9,7 @@ class MypagesController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json {
+      format.json do
         page = params[:page].to_i || 1
         per_page = 12
         offset = (page - 1) * per_page
@@ -28,7 +28,7 @@ class MypagesController < ApplicationController
           next_page: page + 1,
           last_page: @posts.size < per_page
         }
-      }
+      end
     end
   end
 
@@ -38,7 +38,7 @@ class MypagesController < ApplicationController
 
   def update
     if @user.update(user_params)
-      flash[:success] = "プロフィールを更新しました"
+      flash[:success] = 'プロフィールを更新しました'
       redirect_to mypage_url(protocol: 'https'), notice: t('controllers.mypages.update.success')
     else
       flash.now[:error] = "更新に失敗しました: #{@user.errors.full_messages.join(', ')}"
@@ -48,11 +48,11 @@ class MypagesController < ApplicationController
 
   def posts
     @posts = current_user.posts.order(created_at: :desc)
-      .includes(:user, :post_images, :hashtags, :prefecture)
+                         .includes(:user, :post_images, :hashtags, :prefecture)
 
     respond_to do |format|
       format.html
-      format.json {
+      format.json do
         page = params[:page].to_i || 1
         per_page = 10
         offset = (page - 1) * per_page
@@ -63,15 +63,14 @@ class MypagesController < ApplicationController
           next_page: page + 1,
           last_page: paginated_posts.size < per_page
         }
-      }
+      end
     end
   end
 
   def post
     @post = current_user.posts.includes(:user, :post_images, :hashtags, :prefecture).find(params[:id])
-
   rescue ActiveRecord::RecordNotFound
-    redirect_to mypage_path, alert: "投稿が見つかりませんでした"
+    redirect_to mypage_path, alert: '投稿が見つかりませんでした'
   end
 
   private

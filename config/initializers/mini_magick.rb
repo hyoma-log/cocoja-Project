@@ -1,8 +1,8 @@
 MiniMagick.configure do |config|
   begin
-    gm_exists = system("which gm > /dev/null 2>&1")
+    gm_exists = system('which gm > /dev/null 2>&1')
     config.cli = :graphicsmagick if gm_exists
-  rescue => e
+  rescue StandardError => e
     Rails.logger.warn "GraphicsMagick検出中にエラーが発生しました: #{e.message}"
   end
 

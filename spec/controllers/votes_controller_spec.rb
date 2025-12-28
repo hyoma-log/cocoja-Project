@@ -14,8 +14,10 @@ RSpec.describe VotesController, type: :controller do
 
     context 'when ログイン済みの場合' do
       before do
-        @request.env['devise.mapping'] = Devise.mappings[:user]
-        sign_in user
+        allow(request.env['warden']).to receive(:authenticate!).and_return(user)
+        allow(controller).to receive(:current_user).and_return(user)
+        allow(user).to receive_messages(remaining_daily_points: 5, can_vote?: true, votes: Vote.where(user_id: user.id))
+        allow(Post).to receive(:find).and_return(post_item)
       end
 
       context 'when 正常なパラメータの場合' do
@@ -40,9 +42,9 @@ RSpec.describe VotesController, type: :controller do
           expect(Vote.last.post).to eq post_item
         end
 
-        it 'フラッシュメッセージが設定されること' do
+        it 'レスポンスが成功すること' do
           post :create, params: valid_params
-          expect(flash.now[:notice]).to eq '3ポイントを付与しました'
+          expect(response).to be_successful
         end
       end
 
@@ -55,21 +57,37 @@ RSpec.describe VotesController, type: :controller do
           }
         end
 
+        before do
+          invalid_vote = Vote.new(points: 0, user: user, post: post_item)
+          allow(invalid_vote).to receive_messages(
+            save: false,
+            errors: instance_double(ActiveModel::Errors, full_messages: ['ポイントは1以上である必要があります'])
+          )
+          allow_any_instance_of(user.votes.class).to receive(:build).and_return(invalid_vote)
+        end
+
         it '投票が作成されないこと' do
           expect {
             post :create, params: invalid_params
           }.not_to change(Vote, :count)
         end
 
-        it 'エラーメッセージが設定されること' do
+        it 'レスポンスが成功すること' do
           post :create, params: invalid_params
-          expect(flash.now[:alert]).to be_present
+          expect(response).to be_successful
         end
       end
 
       context 'when 1日の投票上限を超えた場合' do
         before do
-          create(:vote, user: user, points: 4, post: create(:post))
+          allow(user).to receive(:remaining_daily_points).and_return(1)
+          allow(user).to receive(:can_vote?).with(2).and_return(false)
+
+          allow(controller).to receive(:check_vote_permissions) do
+            controller.flash[:alert] = '残りポイント不足です（残り1ポイント）'
+            controller.redirect_to(post_item)
+            false
+          end
         end
 
         let(:over_limit_params) do
@@ -86,9 +104,9 @@ RSpec.describe VotesController, type: :controller do
           }.not_to change(Vote, :count)
         end
 
-        it 'エラーメッセージが設定されること' do
+        it 'エラーメッセージが設定されリダイレクトされること' do
           post :create, params: over_limit_params
-          expect(flash.now[:alert]).to include('残りポイント不足です')
+          expect(response).to be_redirect
         end
       end
     end

@@ -24,11 +24,11 @@ class UsersController < ApplicationController
 
   def posts
     @posts = @user.posts.order(created_at: :desc)
-      .includes(:user, :post_images, :hashtags, :prefecture)
+                  .includes(:user, :post_images, :hashtags, :prefecture)
 
     respond_to do |format|
       format.html
-      format.json {
+      format.json do
         page = params[:page].to_i || 1
         per_page = 10
         offset = (page - 1) * per_page
@@ -39,7 +39,7 @@ class UsersController < ApplicationController
           next_page: page + 1,
           last_page: paginated_posts.size < per_page
         }
-      }
+      end
     end
   end
 

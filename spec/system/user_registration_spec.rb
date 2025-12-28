@@ -15,6 +15,12 @@ RSpec.describe 'ユーザー登録', type: :system do
           fill_in 'パスワードの確認', with: 'password123'
           click_button '登録する'
         end
+
+        registered_user = User.find_by(email: 'test@example.com')
+        registered_user.confirm # 認証完了
+        sign_in registered_user # 明示的にサインイン
+
+        visit profile_setup_path
       end
 
       it 'メールアドレス登録に成功すること' do
@@ -22,15 +28,13 @@ RSpec.describe 'ユーザー登録', type: :system do
       end
 
       context 'when プロフィール設定時' do
-        before do
-          within 'form' do
+        it 'プロフィール設定が完了すること' do
+          within 'form[action="/profile/update"]' do
             fill_in 'ユーザー名', with: 'testuser'
             fill_in 'ユーザーID', with: 'testid123'
             click_button 'プロフィールを設定する'
           end
-        end
 
-        it 'プロフィール設定が完了すること' do
           expect(page).to have_current_path(top_page_login_path)
           expect(page).to have_content 'プロフィールを更新しました'
         end

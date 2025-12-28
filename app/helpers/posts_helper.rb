@@ -9,7 +9,7 @@ module PostsHelper
       link_to tag, "/posts/hashtag/#{tag_name}", class: 'text-blue-600 hover:underline'
     end
 
-    formatted_content = formatted_content.gsub(/\r\n|\r|\n/, "<br>")
+    formatted_content = formatted_content.gsub(/\r\n|\r|\n/, '<br>')
 
     sanitize(formatted_content, tags: %w[a br], attributes: %w[href class])
   end
@@ -29,8 +29,8 @@ module PostsHelper
       content_tag(:span, tag, class: 'text-blue-600')
     end
 
-    content_with_tags = content_with_tags.gsub(/\r\n|\r|\n/, "<br>")
+    content_with_tags = content_with_tags.gsub(/\r\n|\r|\n/, '<br>')
 
-    sanitize(content_with_tags, tags: ['span', 'br'], attributes: ['class'])
+    sanitize(content_with_tags, tags: %w[span br], attributes: ['class'])
   end
 end

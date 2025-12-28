@@ -3,15 +3,15 @@ require 'rails_helper'
 RSpec.describe ApplicationController, type: :controller do
   let(:user) do
     user = build(:user)
-    allow(user).to receive(:send_confirmation_instructions).and_return(true)
-    allow(user).to receive(:send_on_create_confirmation_instructions).and_return(true)
+    allow(user).to receive_messages(send_confirmation_instructions: true,
+send_on_create_confirmation_instructions: true)
     user.skip_confirmation!
     user.confirm
     user.save(validate: false)
     user
   end
 
-  before(:each) do
+  before do
     allow_any_instance_of(User).to receive(:send_welcome_email).and_return(true) if defined?(User.send_welcome_email)
     allow_any_instance_of(Net::SMTP).to receive(:start).and_return(true)
     allow_any_instance_of(Net::SMTP).to receive(:send_message).and_return(true)
@@ -62,8 +62,7 @@ RSpec.describe ApplicationController, type: :controller do
 
     context 'when ログインしていない' do
       it 'リダイレクトしないこと' do
-        allow(controller).to receive(:authenticate_user!).and_return(true)
-        allow(controller).to receive(:user_signed_in?).and_return(false)
+        allow(controller).to receive_messages(authenticate_user!: true, user_signed_in?: false)
 
         get :index
         expect(response).to have_http_status(:ok)
@@ -87,8 +86,7 @@ RSpec.describe ApplicationController, type: :controller do
 
     context 'ログインしていない場合' do
       it 'indexアクションにアクセスできること' do
-        allow(controller).to receive(:authenticate_user!).and_return(true)
-        allow(controller).to receive(:user_signed_in?).and_return(false)
+        allow(controller).to receive_messages(authenticate_user!: true, user_signed_in?: false)
 
         get :index
         expect(response).to have_http_status(:ok)

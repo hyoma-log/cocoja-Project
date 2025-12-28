@@ -6,8 +6,9 @@ RSpec.describe TopPageLoginController, type: :controller do
       let(:user) { create(:user) }
 
       before do
-        @request.env['devise.mapping'] = Devise.mappings[:user]
-        sign_in user
+        allow(request.env['warden']).to receive(:authenticate!).and_return(user)
+        allow(controller).to receive_messages(current_user: user, user_signed_in?: true)
+
         get :top
       end
 

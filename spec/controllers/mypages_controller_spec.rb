@@ -3,15 +3,15 @@ require 'rails_helper'
 RSpec.describe MypagesController, type: :controller do
   let(:user) do
     user = build(:user)
-    allow(user).to receive(:send_confirmation_instructions).and_return(true)
-    allow(user).to receive(:send_on_create_confirmation_instructions).and_return(true)
+    allow(user).to receive_messages(send_confirmation_instructions: true,
+send_on_create_confirmation_instructions: true)
     user.skip_confirmation! if user.respond_to?(:skip_confirmation!)
     user.confirm if user.respond_to?(:confirm)
     user.save(validate: false)
     user
   end
 
-  before(:each) do
+  before do
     allow_any_instance_of(User).to receive(:send_welcome_email).and_return(true) if defined?(User.send_welcome_email)
     allow_any_instance_of(Net::SMTP).to receive(:start).and_return(true)
     allow_any_instance_of(Net::SMTP).to receive(:send_message).and_return(true)
