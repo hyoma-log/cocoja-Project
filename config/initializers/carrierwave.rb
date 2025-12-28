@@ -25,7 +25,7 @@ CarrierWave.configure do |config|
     Cloudinary.config.static_file_support = false
     Cloudinary.config.eager_transformation = false
 
-    Cloudinary.config.resource_type = "auto"
+    Cloudinary.config.resource_type = 'auto'
     Cloudinary.config.unique_filename = true
 
     Cloudinary.config.use_root_path = true

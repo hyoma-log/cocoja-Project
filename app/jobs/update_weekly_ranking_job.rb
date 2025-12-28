@@ -8,7 +8,7 @@ class UpdateWeeklyRankingJob < ApplicationJob
 
     prefecture_points = Prefecture.weekly_points_for_all(@start_date, @end_date)
 
-    prefectures = Prefecture.all.index_by(&:id)
+    Prefecture.all.index_by(&:id)
 
     create_rankings(prefecture_points)
 

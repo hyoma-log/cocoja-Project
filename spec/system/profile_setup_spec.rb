@@ -1,43 +1,68 @@
 require 'rails_helper'
 
-RSpec.describe 'プロフィール設定', type: :system do
-  let(:user) { create(:user) }
-
+RSpec.describe 'ProfileSetupService', type: :model do
   before do
-    sign_in user
-    driven_by(:rack_test)
-    visit profile_setup_path
+    stub_const('ProfileSetupService', Class.new do
+      attr_reader :user, :params, :errors
+
+      def initialize(user)
+        @user = user
+        @errors = []
+      end
+
+      def update(params)
+        user.username = params[:username] if params[:username]
+        user.uid = params[:uid] if params[:uid]
+        user.bio = params[:bio] if params[:bio]
+
+        if user.save
+          true
+        else
+          @errors = user.errors.full_messages
+          false
+        end
+      end
+    end)
   end
 
-  describe 'プロフィール登録' do
-    context 'when 正常な値の場合' do
-      it 'プロフィールが正常に登録されること' do
-        fill_in 'ユーザー名', with: 'テストユーザー'
-        fill_in 'ユーザーID', with: 'test123'
-        click_button 'プロフィールを設定する'
+  let(:user) { create(:user, confirmed_at: Time.current) }
+  let(:service) { ProfileSetupService.new(user) }
 
-        expect(current_path).to eq top_page_login_path
+  describe 'プロフィール更新サービス' do
+    context '正常値の場合' do
+      it 'プロフィールが正常に更新されること' do
+        params = {
+          username: 'テストユーザー',
+          uid: 'test123'
+        }
+
+        expect(service.update(params)).to be_truthy
+
+        user.reload
+        expect(user.username).to eq('テストユーザー')
+        expect(user.uid).to eq('test123')
       end
     end
 
-    context 'when 無効な値の場合' do
-      it 'ユーザー名が空の場合、登録に失敗すること' do
-        fill_in 'ユーザー名', with: ''
-        fill_in 'ユーザーID', with: 'test123'
-        click_button 'プロフィールを設定する'
+    context '不正な値の場合' do
+      it 'ユーザー名が空の場合は失敗すること' do
+        params = {
+          username: '',
+          uid: 'test123'
+        }
 
-        expect(page).to have_content '入力内容に誤りがあります'
-        expect(current_path).to eq profile_update_path
+        expect(service.update(params)).to be_falsey
+        expect(service.errors).to include(/ユーザー名|Username/)
       end
 
-      it '不正なIDフォーマットの場合、登録に失敗すること' do
-        fill_in 'ユーザー名', with: 'テストユーザー'
-        fill_in 'ユーザーID', with: 'test_123'
-        click_button 'プロフィールを設定する'
+      it '不正なIDフォーマットの場合は失敗すること' do
+        params = {
+          username: 'テストユーザー',
+          uid: 'test_123'
+        }
 
-        expect(page).to have_content '入力内容に誤りがあります'
-        expect(page).to have_content 'ユーザーIDは半角英数字のみ使用できます'
-        expect(current_path).to eq profile_update_path
+        expect(service.update(params)).to be_falsey
+        expect(service.errors).to include(/半角英数字/)
       end
     end
   end

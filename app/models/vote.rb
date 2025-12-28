@@ -9,15 +9,19 @@ class Vote < ApplicationRecord
   }
 
   validates :user_id, uniqueness: {
-    scope: [:post_id, :voted_on],
+    scope: %i[post_id voted_on],
     message: '同じ投稿には1日1回しかポイントを付けられません'
   }
 
   validate :daily_point_limit
   validate :cannot_vote_own_post
 
+  # scope :today, lambda {
+  #   where("DATE(created_at AT TIME ZONE 'UTC') = ?", Time.zone.today)
+  # }
   scope :today, lambda {
-    where("DATE(created_at AT TIME ZONE 'UTC') = ?", Time.zone.today)
+    # Time.zone.todayの開始時刻から終了時刻までの範囲を指定
+    where(created_at: Time.zone.now.all_day)
   }
 
   before_validation :set_voted_on

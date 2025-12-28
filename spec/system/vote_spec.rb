@@ -7,6 +7,8 @@ RSpec.describe '投票機能', type: :system do
   let!(:post_item) { create(:post, user: other_user, prefecture: prefecture) }
 
   before do
+    user.confirm if user.respond_to?(:confirm)
+    other_user.confirm if other_user.respond_to?(:confirm)
     driven_by(:rack_test)
     sign_in user
     visit post_path(post_item)
@@ -59,7 +61,7 @@ RSpec.describe '投票機能', type: :system do
         end
 
         it '投票フォームが表示されないこと' do
-          expect(page).to have_content 'この投稿にはすでにポイントを付けています'
+          expect(page).to have_content 'この投稿には本日すでにポイントを付けています'
           expect(page).not_to have_content '残りポイント'
         end
       end
@@ -93,7 +95,7 @@ RSpec.describe '投票機能', type: :system do
 
           visit post_path(post_item)
 
-          expect(page).to have_content 'この投稿にはすでにポイントを付けています'
+          expect(page).to have_content 'この投稿には本日すでにポイントを付けています'
           expect(page).not_to have_button '1'
         end
       end
@@ -103,7 +105,7 @@ RSpec.describe '投票機能', type: :system do
           create(:vote, user: user, post: post_item, points: 1)
           visit post_path(post_item)
 
-          expect(page).to have_content 'この投稿にはすでにポイントを付けています'
+          expect(page).to have_content 'この投稿には本日すでにポイントを付けています'
           expect(page).not_to have_button '1'
         end
       end

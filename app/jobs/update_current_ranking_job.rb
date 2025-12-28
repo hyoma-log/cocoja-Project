@@ -14,7 +14,7 @@ class UpdateCurrentRankingJob < ApplicationJob
 
     prefectures = Prefecture.all.index_by(&:id)
 
-    prefectures.each do |id, prefecture|
+    prefectures.each_key do |id|
       prefecture_points[id] ||= 0
     end
 
@@ -32,6 +32,6 @@ class UpdateCurrentRankingJob < ApplicationJob
       end
     end
 
-    Rails.cache.delete("current_rankings")
+    Rails.cache.delete('current_rankings')
   end
 end

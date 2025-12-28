@@ -52,7 +52,7 @@ RSpec.describe Vote, type: :model do
         create(:vote, user: user, post: post, points: 2)
         vote = build(:vote, user: user, post: post, points: 1)
         expect(vote).not_to be_valid
-        expect(vote.errors[:user_id]).to include('同じ投稿には一度しかポイントを付けられません')
+        expect(vote.errors[:user_id]).to include('同じ投稿には1日1回しかポイントを付けられません')
       end
     end
   end

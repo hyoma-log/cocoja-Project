@@ -8,4 +8,11 @@ RSpec.configure do |config|
   end
 
   config.shared_context_metadata_behavior = :apply_to_host_groups
+
+  # テスト環境のメール設定
+  config.before(:suite) do
+    ActionMailer::Base.delivery_method = :test
+    ActionMailer::Base.perform_deliveries = false
+    ActionMailer::Base.deliveries.clear
+  end
 end

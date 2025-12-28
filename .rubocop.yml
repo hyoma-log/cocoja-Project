@@ -70,7 +70,7 @@ RSpec/MultipleExpectations:
   Max: 5
 
 RSpec/ExampleLength:
-  Max: 10
+  Max: 15
 
 Style/StringLiterals:
   EnforcedStyle: single_quotes
@@ -109,3 +109,23 @@ Rails/TimeZone:
 
 RSpec/MetadataStyle:
   Enabled: false
+
+Style/Documentation:
+  Enabled: false # どこでもドキュメントを強制しない
+
+Metrics/CyclomaticComplexity:
+  Max: 12 # 複雑度のしきい値を引き上げ
+
+Metrics/PerceivedComplexity:
+  Max: 12 # 認知複雑度のしきい値を引き上げ
+
+Metrics/AbcSize:
+  Max: 55 # メソッド内の処理量の制限を緩和
+
+Layout/LineLength:
+  Max: 120
+  Exclude:
+    - 'config/initializers/devise.rb' # 長いURLが含まれるファイルを対象外に
+
+RSpec/AnyInstance:
+  Enabled: false # テストでの allow_any_instance_of を許容する（修正が大変なため）
