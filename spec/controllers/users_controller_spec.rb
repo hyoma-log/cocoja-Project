@@ -5,7 +5,11 @@ RSpec.describe UsersController, type: :controller do
   let(:other_user) { create(:user) }
 
   describe 'ログイン済みのユーザーの場合' do
-    before { sign_in user }
+    before do
+      allow(request.env['warden']).to receive(:authenticate!).and_return(user)
+      allow(controller).to receive(:current_user).and_return(user)
+      allow(controller).to receive(:user_signed_in?).and_return(true)
+    end
 
     describe 'GET #show' do
       it 'ユーザーの詳細ページを表示できること' do
@@ -14,7 +18,10 @@ RSpec.describe UsersController, type: :controller do
       end
 
       it '存在しないユーザーの場合はリダイレクトすること' do
+        allow(User).to receive(:find).with('invalid').and_raise(ActiveRecord::RecordNotFound)
+
         get :show, params: { id: 'invalid' }
+
         expect(response).to redirect_to(user_path)
         expect(flash[:alert]).to be_present
       end

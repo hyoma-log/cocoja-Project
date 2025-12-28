@@ -22,6 +22,7 @@ group :development, :test do
   gem 'rubocop-rails-omakase', require: false
   gem 'rubocop-rspec', require: false
   gem 'rubocop-rspec_rails', require: false
+  gem 'rails-controller-testing'
 end
 
 group :development do

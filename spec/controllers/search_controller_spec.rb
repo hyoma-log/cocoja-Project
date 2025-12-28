@@ -7,7 +7,8 @@ RSpec.describe SearchController, type: :controller do
     let!(:hashtag) { create(:hashtag, name: 'testhashtag') }
 
     before do
-      sign_in user
+      allow(request.env['warden']).to receive(:authenticate!).and_return(user)
+      allow(controller).to receive(:current_user).and_return(user)
 
       request.env['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
       request.env['HTTP_ACCEPT'] = 'application/json'

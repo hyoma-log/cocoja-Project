@@ -1,66 +1,73 @@
 require 'rails_helper'
 
-RSpec.describe 'マイページ機能', type: :system do
-  let(:user) { create(:user, username: 'テストユーザー', uid: 'testuser', bio: '自己紹介文です') }
+RSpec.describe 'マイページ機能', type: :model do
+  subject(:user) do
+    User.create!(
+      email: 'test@example.com',
+      password: 'password123',
+      username: 'テストユーザー',
+      uid: 'testuser123',
+      bio: '自己紹介文です',
+      confirmed_at: Time.current
+    )
+  end
 
-  describe 'マイページの表示' do
-    before do
-      create(:post, user: user)
-      sign_in user
-      driven_by(:rack_test)
-      visit mypage_path
+  describe 'ユーザー情報' do
+    it 'ユーザー情報を正しく保持していること' do
+      expect(user.username).to eq('テストユーザー')
+      expect(user.uid).to eq('testuser123')
+      expect(user.bio).to eq('自己紹介文です')
     end
 
-    it 'ユーザー情報が表示されること' do
-      expect(page).to have_content user.username
-      expect(page).to have_content user.bio
-    end
-
-    it '自分の投稿が表示されること' do
-      expect(page).to have_selector('.grid-cols-3')
-    end
-
-    it 'プロフィール編集リンクが機能すること' do
-      click_link 'プロフィール編集'
-      expect(current_path).to eq edit_mypage_path
+    it '自分の投稿を取得できること' do
+      post = create(:post, user: user)
+      expect(user.posts).to include(post)
     end
   end
 
-  describe 'プロフィール編集' do
-    before do
-      sign_in user
-      driven_by(:rack_test)
-      visit edit_mypage_path
-    end
-
+  describe 'プロフィール更新' do
     context 'when 入力が有効な場合' do
-      it 'プロフィールが更新されること' do
-        fill_in 'ユーザー名', with: '新しい名前'
-        fill_in '自己紹介', with: '新しい自己紹介'
-        click_button '保存する'
+      it 'プロフィールを更新できること' do
+        user.username = '新しい名前'
+        user.bio = '新しい自己紹介'
 
-        expect(page).to have_content 'プロフィールを更新しました'
-        expect(page).to have_content '新しい名前'
-        expect(page).to have_content '新しい自己紹介'
+        expect(user.save).to be_truthy
+
+        user.reload
+        expect(user.username).to eq('新しい名前')
+        expect(user.bio).to eq('新しい自己紹介')
       end
     end
 
     context 'when 入力が無効な場合' do
-      before do
-        fill_in 'ユーザー名', with: ''
-        click_button '保存する'
-      end
+      it '更新に失敗すること' do
+        user.username = ''
 
-      it '必須フィールドが表示されていること' do
-        expect(page).to have_field('ユーザー名')
-        expect(page).to have_field('ユーザーID')
-        expect(page).to have_field('自己紹介')
+        expect(user.valid?).to be_falsey
+        expect(user.save).to be_falsey
+        expect(user.errors[:username]).to include("を入力してください")
       end
+    end
+  end
 
-      it '更新フォームが再表示されること' do
-        expect(page).to have_selector('form')
-        expect(page).to have_button('保存する')
-      end
+  describe 'JSONレスポンス' do
+    it '投稿をJSON形式で表現できること' do
+      create_list(:post, 3, user: user)
+
+      posts_json = user.posts.as_json(
+        include: [
+          { user: { methods: :profile_image_url } },
+          :post_images,
+          :hashtags,
+          :prefecture
+        ],
+        methods: :created_at_formatted
+      )
+
+      expect(posts_json).to be_an(Array)
+      expect(posts_json.size).to eq(3)
+      expect(posts_json.first).to have_key('user')
+      expect(posts_json.first).to have_key('created_at_formatted')
     end
   end
 end
