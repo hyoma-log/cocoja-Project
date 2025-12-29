@@ -41,7 +41,7 @@ group :test do
 end
 
 gem 'carrierwave'
-gem 'cloudinary', '~> 2.3'
+gem 'cloudinary', '~> 2.4'
 gem 'concurrent-ruby', '~> 1.2'
 gem 'devise'
 gem 'kaminari'
