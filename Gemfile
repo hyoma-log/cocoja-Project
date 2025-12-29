@@ -32,7 +32,7 @@ end
 
 group :test do
   gem 'capybara', '~> 3.40'
-  gem 'database_cleaner-active_record', '~> 2.1'
+  gem 'database_cleaner-active_record', '~> 2.2'
   # gem 'rails-controller-testing'
   gem 'shoulda-matchers', '~> 6.1'
   gem 'simplecov', '~> 0.22', require: false
