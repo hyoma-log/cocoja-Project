@@ -34,7 +34,7 @@ group :test do
   gem 'capybara', '~> 3.40'
   gem 'database_cleaner-active_record', '~> 2.1'
   # gem 'rails-controller-testing'
-  gem 'shoulda-matchers', '~> 6.1'
+  gem 'shoulda-matchers', '~> 7.0'
   gem 'simplecov', '~> 0.22', require: false
   # gem 'webdrivers', '~> 5.3'
   gem 'selenium-webdriver'
