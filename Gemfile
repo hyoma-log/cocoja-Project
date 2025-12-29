@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'bootsnap', require: false
-gem 'connection_pool', '2.4.1'
+gem 'connection_pool', '3.0.2'
 gem 'cssbundling-rails'
 gem 'jbuilder'
 gem 'jsbundling-rails'
