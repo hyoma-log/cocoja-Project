@@ -4,6 +4,7 @@ services:
     env_file:
       - .env
     environment:
+      POSTGRES_HOST: db
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
@@ -22,7 +23,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    command: bash -c "rm -f tmp/pids/server.pid && bundle install && bin/dev"
+    command: bash -c "gem install foreman && foreman start -f Procfile.dev"
     env_file:
       - .env
     environment:

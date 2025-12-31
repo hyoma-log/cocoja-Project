@@ -1,8 +1,5 @@
-if gem list --no-installed --exact --silent foreman; then
-  echo "Installing foreman..."
+
+if ! gem list --silent foreman; then
   gem install foreman
 fi
-
-export PORT="${PORT:-3000}"
-
-exec foreman start -f Procfile.dev --env /dev/null "$@"
+exec foreman start -f Procfile.dev "$@"
