@@ -44,7 +44,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_27_200644) do
     t.text "content", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "post_images_count", default: 0, null: false
+    t.integer "post_images_count", default: 0
     t.index ["prefecture_id"], name: "index_posts_on_prefecture_id"
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
@@ -65,8 +65,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_27_200644) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
+    t.string "email", null: false
+    t.string "encrypted_password", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -79,10 +79,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_27_200644) do
     t.string "profile_image_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "bio"
-    t.integer "remaining_daily_points"
     t.string "provider"
     t.string "uid_from_provider"
+    t.string "bio"
+    t.integer "remaining_daily_points"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider", "uid_from_provider"], name: "index_users_on_provider_and_uid_from_provider", unique: true
@@ -94,7 +94,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_27_200644) do
   create_table "votes", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "post_id", null: false
-    t.integer "points", null: false
+    t.integer "points", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.date "voted_on", default: -> { "CURRENT_DATE" }, null: false
@@ -112,8 +112,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_27_200644) do
     t.integer "points", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["prefecture_id", "year", "week"], name: "index_weekly_rankings_on_prefecture_year_week", unique: true
     t.index ["prefecture_id"], name: "index_weekly_rankings_on_prefecture_id"
+    t.index ["year", "week", "rank"], name: "index_weekly_rankings_on_year_and_week_and_rank", unique: true
   end
 
   add_foreign_key "post_hashtags", "hashtags"

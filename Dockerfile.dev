@@ -10,7 +10,7 @@ RUN gem uninstall bundler -a -x \
 
 ENV BUNDLE_PATH=/myapp/vendor/bundle
 ENV GEM_HOME=/usr/local/bundle
-ENV PATH $GEM_HOME/bin:$GEM_HOME/gems/bin:$PATH
+ENV PATH /myapp/bin:$GEM_HOME/bin:$PATH
 
 RUN mkdir /myapp
 WORKDIR /myapp
