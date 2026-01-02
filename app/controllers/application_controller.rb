@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   before_action :authenticate_user!
-  before_action :ensure_https_scheme
+  prepend_before_action :ensure_https_scheme
 
   private
 
@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
 
     request.env['rack.url_scheme'] = 'https'
     request.env['HTTPS'] = 'on'
+    Rails.logger.info 'DEBUG: Manually forced HTTPS scheme based on X-Forwarded-Proto'
   end
 
   public
