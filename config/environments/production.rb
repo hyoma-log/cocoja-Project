@@ -18,7 +18,7 @@ Rails.application.configure do
   config.assets.digest = true
   config.assets.version = '1.0'
 
-  config.force_ssl = true
+  config.force_ssl = false
 
   config.action_controller.default_url_options = { protocol: 'https' }
 
