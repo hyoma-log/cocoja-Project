@@ -4,6 +4,9 @@ class User < ApplicationRecord
          :confirmable,
          :omniauthable, omniauth_providers: [:google_oauth2]
 
+  validates :terms_agreement, :privacy_agreement, acceptance: { allow_nil: false, accept: '1' }, on: :create
+  attr_accessor :terms_agreement, :privacy_agreement
+
   has_many :posts, dependent: :destroy
   has_many :votes, dependent: :destroy
   has_many :active_relationships, class_name: 'Relationship',
