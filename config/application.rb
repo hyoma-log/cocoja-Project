@@ -1,4 +1,5 @@
 require_relative 'boot'
+require_relative '../app/middleware/force_scheme_middleware'
 
 require 'rails/all'
 
@@ -21,5 +22,7 @@ module Myapp
 
     # 複数のロケールファイル（config/locales/**/*.yml）を読み込む設定
     config.i18n.load_path += Rails.root.glob('config/locales/**/*.{rb,yml}').map(&:to_s)
+
+    config.middleware.insert_before 0, ForceSchemeMiddleware
   end
 end

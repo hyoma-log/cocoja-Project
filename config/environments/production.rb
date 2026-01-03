@@ -22,7 +22,7 @@ Rails.application.configure do
 
   config.action_controller.default_url_options = { protocol: 'https' }
 
-  config.action_dispatch.trusted_proxies = [IPAddr.new('0.0.0.0/0')]
+  # config.action_dispatch.trusted_proxies = [IPAddr.new('0.0.0.0/0')]
 
   config.ssl_options = {
     hsts: { subdomains: true, preload: true, expires: 1.year },
