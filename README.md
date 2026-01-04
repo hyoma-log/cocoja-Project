@@ -1,4 +1,5 @@
 #  ココじゃ
+サービスURL : https://www.cocoja.jp
 
 ## ■ サービス概要
 **「ガイドブックには載っていない、地域の魅力をみんなでつくる」**
@@ -113,19 +114,19 @@ SNS連携： SNSシェア機能（X/Instagramなどへの導線）。
 
 このアプリケーションは、**Ruby on Rails 7.2** をベースに、**Hotwire (Turbo/Stimulus)** を活用したモダンでシンプルなMPA (Multi-Page Application) 構成を採用しています。
 
-| Category | Technology |
+| カテゴリー | 使用技術 |
 | :--- | :--- |
-| **Backend** | Ruby 3.2 / Ruby on Rails 7.2.0 |
-| **Frontend** | JavaScript, Hotwire (Turbo, Stimulus), Tailwind CSS, esbuild |
-| **Database** | PostgreSQL (Neon) |
-| **Infrastructure** | Docker, Kamal, Back4app (Containers), Redis |
-| **Web Server** | Puma |
-| **Authentication** | Devise, OmniAuth (Google) |
-| **CI/CD** | GitHub Actions (RSpec, RuboCop, Brakeman) |
-| **Orchestration** | Docker Compose |
-| **Testing** | RSpec, Capybara, FactoryBot |
-| **Mail** | SMTP (Gmail) |
-| **Storage** | Cloudinary |
+| **バックエンド** | Ruby 3.2 / Ruby on Rails 7.2.0 |
+| **フロントエンド** | JavaScript, Hotwire (Turbo, Stimulus), Tailwind CSS, esbuild |
+| **データベース** | PostgreSQL (Neon) |
+| **インフラ / 実行環境** | Docker, Kamal, Back4app (Containers), Redis |
+| **Web サーバー** | Puma |
+| **認証機能** | Devise, OmniAuth (Google) |
+| **CI / CD (自動テスト・静的解析)** | GitHub Actions (RSpec, RuboCop, Brakeman) |
+| **環境構築** | Docker Compose |
+| **テストフレームワーク** | RSpec, Capybara, FactoryBot |
+| **メール送信** | SMTP (Gmail) |
+| **ストレージ / 画像管理** | Cloudinary |
 
 # 画面遷移図
 [画面遷移図 - Figma](https://www.figma.com/design/KLFvR5XxxfFpCntEmAjWCI/%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3?node-id=0-1&t=G3GAkMWF2NfmeO7u-1)
