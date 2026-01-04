@@ -1,5 +1,5 @@
 #  ココじゃ
-サービスURL : https://www.cocoja.jp
+サービスURL : https://cocoja-613ycaap.b4a.run/
 
 ## ■ サービス概要
 **「ガイドブックには載っていない、地域の魅力をみんなでつくる」**
