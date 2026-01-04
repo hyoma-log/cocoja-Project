@@ -109,6 +109,24 @@ SNS連携： SNSシェア機能（X/Instagramなどへの導線）。
 
 通知機能： リアルタイム性が求められるため、MVPでは対象外。
 
+## ■ 使用技術
+
+このアプリケーションは、**Ruby on Rails 7.2** をベースに、**Hotwire (Turbo/Stimulus)** を活用したモダンでシンプルなMPA (Multi-Page Application) 構成を採用しています。
+
+| Category | Technology |
+| :--- | :--- |
+| **Backend** | Ruby 3.2 / Ruby on Rails 7.2.0 |
+| **Frontend** | JavaScript, Hotwire (Turbo, Stimulus), Tailwind CSS, esbuild |
+| **Database** | PostgreSQL (Neon) |
+| **Infrastructure** | Docker, Kamal, Back4app (Containers), Redis |
+| **Web Server** | Puma |
+| **Authentication** | Devise, OmniAuth (Google) |
+| **CI/CD** | GitHub Actions (RSpec, RuboCop, Brakeman) |
+| **Orchestration** | Docker Compose |
+| **Testing** | RSpec, Capybara, FactoryBot |
+| **Mail** | SMTP (Gmail) |
+| **Storage** | Cloudinary |
+
 # 画面遷移図
 [画面遷移図 - Figma](https://www.figma.com/design/KLFvR5XxxfFpCntEmAjWCI/%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3?node-id=0-1&t=G3GAkMWF2NfmeO7u-1)
 
