@@ -44,7 +44,7 @@ Devise.setup do |config|
                     prompt: 'select_account',
                     image_aspect_ratio: 'square',
                     image_size: 50,
-                    redirect_uri: Rails.env.production? ? 'https://www.cocoja.jp/users/auth/google_oauth2/callback' : nil
+                      redirect_uri: Rails.env.production? ? "https://#{ENV.fetch('APP_DOMAIN', 'www.cocoja.jp')}/users/auth/google_oauth2/callback" : nil
                   }
 
   config.navigational_formats = ['*/*', :html, :turbo_stream]

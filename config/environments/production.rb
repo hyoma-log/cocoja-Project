@@ -46,13 +46,13 @@ Rails.application.configure do
   config.action_cable.disable_request_forgery_protection = false
   config.action_cable.allowed_request_origins = [%r{http://*}, %r{https://*}]
 
-  config.action_mailer.default_url_options = { host: ENV.fetch('APP_DOMAIN', 'cocoja-86s34ggb.b4a.run'),
+  config.action_mailer.default_url_options = { host: ENV.fetch('APP_DOMAIN', 'www.cocoja.jp'),
 protocol: 'https' }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address:              'smtp.gmail.com',
     port:                 587,
-    domain:               ENV.fetch('APP_DOMAIN', 'cocoja-86s34ggb.b4a.run'),
+    domain:               ENV.fetch('APP_DOMAIN', 'www.cocoja.jp'),
     user_name:            Rails.application.credentials.dig(:gmail, :username),
     password:             Rails.application.credentials.dig(:gmail, :password),
     authentication:       'plain',
