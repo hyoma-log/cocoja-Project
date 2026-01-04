@@ -34,7 +34,9 @@ RSpec.describe User, type: :model do
           password: 'password',
           provider: 'google_oauth2',
           uid_from_provider: '123456789',
-          username: 'testuser'
+          username: 'testuser',
+          terms_agreement: '1',
+          privacy_agreement: '1'
         )
       end
 

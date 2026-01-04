@@ -41,7 +41,9 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
           provider: 'google_oauth2',
           uid_from_provider: '123456789',
           username: 'testuser',
-          uid: 'testuid'
+          uid: 'testuid',
+          terms_agreement: '1',
+          privacy_agreement: '1'
         )
       end
 
