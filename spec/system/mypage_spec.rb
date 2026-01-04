@@ -2,14 +2,13 @@ require 'rails_helper'
 
 RSpec.describe 'マイページ機能', type: :model do
   subject(:user) do
-    User.create!(
+    create(:user,
       email: 'test@example.com',
       password: 'password123',
       username: 'テストユーザー',
       uid: 'testuser123',
       bio: '自己紹介文です',
-      confirmed_at: Time.current
-    )
+      confirmed_at: Time.current)
   end
 
   describe 'ユーザー情報' do

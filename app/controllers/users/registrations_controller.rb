@@ -1,10 +1,8 @@
 module Users
   class RegistrationsController < Devise::RegistrationsController
+    # rubocop:disable Rails/LexicallyScopedActionFilter
     before_action :configure_sign_up_params, only: [:create]
-
-    # def create
-    #   super
-    # end
+    # rubocop:enable Rails/LexicallyScopedActionFilter
 
     protected
 

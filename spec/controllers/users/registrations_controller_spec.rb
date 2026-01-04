@@ -13,7 +13,9 @@ RSpec.describe Users::RegistrationsController, type: :controller do
           uid: 'testuser777',
           email: 'test@example.com',
           password: 'password',
-          password_confirmation: 'password'
+          password_confirmation: 'password',
+          terms_agreement: '1',
+          privacy_agreement: '1'
         }
       }
     end

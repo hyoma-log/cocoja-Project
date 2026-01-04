@@ -13,6 +13,8 @@ RSpec.describe 'ユーザー登録', type: :system do
           fill_in 'メールアドレス', with: 'test@example.com'
           fill_in 'パスワード', with: 'password123'
           fill_in 'パスワードの確認', with: 'password123'
+          check 'user_terms_agreement'
+          check 'user_privacy_agreement'
           click_button '登録する'
         end
 

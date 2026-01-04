@@ -65,6 +65,8 @@ class User < ApplicationRecord
       end
 
       user.skip_confirmation!
+      user.terms_agreement = '1'
+      user.privacy_agreement = '1'
       user.confirm
     end
   end
